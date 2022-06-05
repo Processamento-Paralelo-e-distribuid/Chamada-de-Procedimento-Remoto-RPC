@@ -1,8 +1,6 @@
 import pandas as pd
 import random
-import xmlrpc.client
-import sys
-import string
+import xdrlib as xdr
 from hashlib import sha1
 from xmlrpc.server import SimpleXMLRPCServer
 
@@ -80,7 +78,7 @@ def submitChallenge(transactionID, ClientID, seed):
     challenge = trasition["Challenge"].values[0]
     
     if(hash[0:challenge] == "0"*challenge and hash[challenge] != "0"):
-        trasition.loc[transactionID,"Seed"]   = seed
+        trasition.loc[transactionID,"Seed"]   = str(seed)
         trasition.loc[transactionID,"Winner"] = ClientID
         df.iloc[transactionID,:] = trasition.iloc[0,:]
         
@@ -112,11 +110,28 @@ def getSeed(transactionID):
     
     trasition = df.query("TransactionID == "+str(transactionID))
     
-    print(tuple(trasition.iloc[transactionID,1:].values))
+    tupla = tuple(trasition.iloc[0,1:3].values)
+    
+    p = xdr.Packer()
+    p.pack_uint(1)
     if(trasition.empty == False):
-        return tuple(trasition.iloc[transactionID,1:].values)
+        return p
     else:
         return -1
+
+
+#p = xdr.Packer()
+#p.pack_uint(1)
+#p.pack_string("spam")
+#p.pack_uint(1)
+
+
+x = getSeed(0)
+data = x.get_buffer()
+
+u = xdr.Unpacker(data)
+
+print(u.unpack_uint())
 
 server = SimpleXMLRPCServer(("0.0.0.0", 8000))
 print("Listening on port 8000...")

@@ -1,11 +1,18 @@
 from ctypes.wintypes import PINT
+from operator import imod
 from urllib import response
 import xmlrpc.client
 import sys
 import random
 import string
 import threading
+import pickle
 from hashlib import sha1
+import xdrlib as xdr
+
+def printFort(text, aux, n=1):
+    print(text, end="")
+    print(" "*(aux-len(text)-n)+"|")
  
 # Calcula total de argumentos
 n = len(sys.argv)
@@ -20,62 +27,92 @@ proxy = xmlrpc.client.ServerProxy(rpcServerAddr)
 
 multicall = xmlrpc.client.MultiCall(proxy)
 
-seed = []
-
-print("\nMENU:")
-print("(1) - getTransactionID.")
-print("(2) - getChallenge.")
-print("(3) - getTransactionStatus.")
-print("(4) - getWinner.")
-print("(5) - getSeed.")
-print("(6) - Minerar.")
-
+aux = 60
+print("#"*aux)
+printFort("|", aux)
+text = "| MENU:"
+printFort(text, aux)
+text = "| (1) - getTransactionID."
+printFort(text, aux)
+text = "| (2) - getChallenge."
+printFort(text, aux)
+text = "| (3) - getTransactionStatus."
+printFort(text, aux)
+text = "| (4) - getWinner"
+printFort(text, aux)
+text = "| (5) - getSeed."
+printFort(text, aux)
+text = "| (6) - Minerar."
+printFort(text, aux)
+text = "| (7) - Printar MENU."
+printFort(text, aux)
 
 while(True):
-    escolha = int(input("\nDigite sua escolha do MENU: "))
+    printFort("|", aux)
+    print("#"*aux)
+    printFort("|", aux)
+    
+    escolha = int(input("| Digite sua escolha do MENU: "))
+    printFort("|", aux)
+    print("#"*aux)
+    printFort("|", aux)
     
     # 1 - getTransactionID()
     if(escolha == 1):
         transactionID = proxy.getTransactionID()
-        print("\n|O valor do ID da transação atual é {}|".format(transactionID))
+        text = "| O valor do ID da transação atual é "+str(transactionID)
+        printFort(text, aux)
     # 2 - getChallenge()
     elif(escolha == 2):
-        transactionID = int(input("Digite o ID da transação: "))
+        transactionID = int(input("| Digite o ID da transação: "))
         challenger = proxy.getChallenge(transactionID)
-        print("\n|O valor do desafio associado ao ID {} e {}|".format(transactionID, challenger))
+        text = "| O valor do desafio associado ao ID "+str(transactionID)+" e "+str(challenger)
+        printFort(text, aux)
     # 3 - getTransactionStatus()
     elif(escolha == 3):
-        transactionID = int(input("Digite o ID da transação: "))
+        transactionID = int(input("| Digite o ID da transação: "))
         status = proxy.getTransactionStatus(transactionID)
     
+        text = ""
         if(status == -1):
-            print("\n|ID da transação invalido|")
+            text = "| ID da transação invalido"
         elif(status == 0):
-            print("\n|A Transação já foi solucionada|")
+            text = "| A Transação já foi solucionada"
         elif(status == 1):
-            print("\n|Transação não foi solucionada, desafio pendente|")
+            text = "| Transação não foi solucionada, desafio pendente"
+        printFort(text, aux)
         
     # 4 - getWinner()
     elif(escolha == 4):
-        transactionID = int(input("Digite o ID da transação: "))
+        transactionID = int(input("| Digite o ID da transação: "))
         clientID = proxy.getWinner(transactionID)
+        
+        text = ""
         if(clientID == -1):
-            print("\n|ID da transação invalido|")
+            text = "| ID da transação invalido"
         elif(clientID == 0):
-            print("\n|Transação não foi solucionada, sem vencedor|")
+            text = "| Transação não foi solucionada, sem vencedor"
         else:
-            print("\n|O valor do id do vencedor associado a transação {} e {}|".format(transactionID, clientID))
-
+            text = "| O valor do id do vencedor associado a transação "+str(transactionID)+" e "+str(clientID)
+        printFort(text, aux)
     # 5 - getSeed()
     elif(escolha == 5):
-        transactionID = int(input("Digite o ID da transação: "))
+        transactionID = int(input("| Digite o ID da transação: "))
         tupla = proxy.getSeed(transactionID)
-        if(tupla == -1):
-            print("\n|ID da transação invalido|")
-        else:
-            print("\n|{}|".format(tupla))
+        #aux = pickle.loads(tupla)
+        print(type(tupla))
+        aux = xmlrpc.client.Binary.decode(tupla)
+        print(aux)
+        #if(tupla == -1):
+        #    text = "| ID da transação invalido"
+        #elif(tupla == ""):
+        #    text = "| Desafio não resolvido"
+        #else:
+        #    text = tupla
+        #printFort(text, aux)
     # 6 - Minerar
     elif(escolha == 6):
+        seed = []
         # 1 - Buscar trasactionID atual
         transactionID = proxy.getTransactionID()
 
@@ -85,6 +122,12 @@ while(True):
         # 3 - Buscar, localmente, uma seed (semente) que solucione o desafio proposto
         flag = True
 
+        text = "| ID da transação atual: "+str(transactionID)+", desafio associado: "+str(challenger)
+        printFort(text, aux)
+        
+        text = "| Procurando seed ..."
+        printFort(text, aux)
+        
         def random_generator(size=6, n=1, chars=string.printable): # Gera string aleatória
             random.seed(n)
             return ''.join(random.choice(chars) for _ in range(size))
@@ -122,22 +165,42 @@ while(True):
             thread.join()
 
         # 4 - Imprimir localmente a seed encontrada
-        print("\n|A seed encontrada é {}|".format(seed))
-            
+        text = "| A seed encontrada é "+str(seed)
+        printFort(text, aux)
+        
         # 5 - Submete seed ao servidor e espera resposta.
-        ClientID = int(input("Digite o ID do cliente: "))
+        ClientID = int(input("| Digite o ID do cliente: "))
         
         resposta = proxy.submitChallenge(transactionID, ClientID, seed[0])
         
         # 6 - Imprime e decodfica resposta do servidor.
+        text = ""
         if(resposta == -1):
-            print("\n|ID da transação invalido|")
+            text = "| ID da transação invalido"
         elif(resposta == 0):
-            print("\n|A seed passada é invalida, logo não resolve o desafio|")
+            text = "| A seed passada é invalida, logo não resolve o desafio"
         elif(resposta == 1):
-            print("\n|A seed passada é valida|")
+            text = "| A seed passada é valida"
         elif(resposta == 2):
-            print("\n|O desafio já foi solucionado|")
+            text = "| O desafio já foi solucionado"
+        printFort(text, aux)
+    elif(escolha == 7):
+        text = "| MENU:"
+        printFort(text, aux)
+        text = "| (1) - getTransactionID."
+        printFort(text, aux)
+        text = "| (2) - getChallenge."
+        printFort(text, aux)
+        text = "| (3) - getTransactionStatus."
+        printFort(text, aux)
+        text = "| (4) - getWinner"
+        printFort(text, aux)
+        text = "| (5) - getSeed."
+        printFort(text, aux)
+        text = "| (6) - Minerar."
+        printFort(text, aux)
+        text = "| (7) - Printar MENU."
+        printFort(text, aux)
     else:
         break
 
