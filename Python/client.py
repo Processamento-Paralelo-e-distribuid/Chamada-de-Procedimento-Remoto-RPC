@@ -99,10 +99,11 @@ while(True):
     elif(escolha == 5):
         transactionID = int(input("| Digite o ID da transação: "))
         tupla = proxy.getSeed(transactionID)
-        #aux = pickle.loads(tupla)
         print(type(tupla))
+        #aux = pickle.loads(tupla)
         aux = xmlrpc.client.Binary.decode(tupla)
         print(aux)
+        #print(aux)
         #if(tupla == -1):
         #    text = "| ID da transação invalido"
         #elif(tupla == ""):
