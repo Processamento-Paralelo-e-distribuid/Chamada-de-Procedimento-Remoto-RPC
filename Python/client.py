@@ -27,7 +27,7 @@ proxy = xmlrpc.client.ServerProxy(rpcServerAddr)
 
 multicall = xmlrpc.client.MultiCall(proxy)
 
-aux = 60
+aux = 95
 print("#"*aux)
 printFort("|", aux)
 text = "| MENU:"
@@ -99,18 +99,17 @@ while(True):
     elif(escolha == 5):
         transactionID = int(input("| Digite o ID da transação: "))
         tupla = proxy.getSeed(transactionID)
-        print(type(tupla))
-        #aux = pickle.loads(tupla)
-        aux = xmlrpc.client.Binary.decode(tupla)
-        print(aux)
-        #print(aux)
-        #if(tupla == -1):
-        #    text = "| ID da transação invalido"
-        #elif(tupla == ""):
-        #    text = "| Desafio não resolvido"
-        #else:
-        #    text = tupla
-        #printFort(text, aux)
+        
+        text = ""
+        if(tupla == -1):
+            text = "| ID da transação invalido"
+        else:
+            tupla= pickle.loads(tupla.data)
+            if(tupla[2] == -1):
+                text = "| Desafio não resolvido"
+            else:
+                text = "| Para a trasição de ID "+str(transactionID)+" e CHALLENGER "+str(tupla[0])+" foi encontrada uma seed \""+str(tupla[1])+"\" pelo cliente "+str(tupla[2])
+        printFort(text, aux)
     # 6 - Minerar
     elif(escolha == 6):
         seed = []

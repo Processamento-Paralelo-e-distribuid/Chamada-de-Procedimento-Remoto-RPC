@@ -2,6 +2,7 @@ from copyreg import pickle
 import pandas as pd
 import random
 import xdrlib as xdr
+import pickle
 from hashlib import sha1
 from xmlrpc.server import SimpleXMLRPCServer
 
@@ -110,39 +111,13 @@ def getWinner(transactionID):
 def getSeed(transactionID):
     try:
         df = pd.read_csv(arquivo)
+    
+        trasition = df.query("TransactionID == "+str(transactionID))        
+        tupla = tuple(trasition.iloc[0,1:].values)
+
+        return pickle.dumps(tupla)
     except:
         return -1
-    
-    trasition = df.query("TransactionID == "+str(transactionID))
-    
-    tupla = tuple(trasition.iloc[0,1:3].values)
-    
-    #p = xdr.Packer()
-    #p.pack_uint(1)
-    import pickle
-    
-    t=[1,2,3]
-    s = pickle.dumps(t)
-    
-    if(trasition.empty == False):
-        return s
-    else:
-        return -1
-import pickle
-print(getSeed(0))
-print(pickle.loads(getSeed(0)))
-#p = xdr.Packer()
-#p.pack_uint(1)
-#p.pack_string("spam")
-#p.pack_uint(1)
-
-
-#x = getSeed(0)
-#data = x.get_buffer()
-
-#u = xdr.Unpacker(data)
-
-#print(u.unpack_uint())
 
 server = SimpleXMLRPCServer(("0.0.0.0", 8000))
 print("Listening on port 8000...")
