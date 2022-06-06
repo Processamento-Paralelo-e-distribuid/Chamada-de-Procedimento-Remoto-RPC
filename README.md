@@ -3,7 +3,8 @@
 ## Objetivo
 Implementação de um sistema distribuido baseados na arquitetura Cliente/Servidor usando o conceito de chamada de procedimento remoto RPC nas linguagem C e Python
 
-## Desenvolvimento
+## Desenvolvimento (Python)
+
 O desenvolvimento do código foi elaborado voltado para a ultilização de chamas RPC juntamente com mult-threading, o programa do cliente possue um (MENU) que detre todas as suas opções vale destacar a opção 6 que possue a finalidade de mineração de seeds. Nesta opção o cliente gera e testa localmente seeds que possivelmente resolvam o desafio associado a transição atual passada pelo servidor.
 Seu metodo de execução inicialmente busta o challeger atrelado à transição atual, posteriormente gera strigs de forma aleatorias e as decodifica para verificar se o hash associado a string resolve o desafio.
 
@@ -12,7 +13,7 @@ O paralelismo é abordado na criação das strings, onde são mantidas 11 threds
 
 ## Execução do programa
 
-### Local (Python)
+### Local
  [1] - Acesse a pasta "Python"
  [2] - Execute o servidor utilizando o comando logo abaixo:
 ```
@@ -23,7 +24,7 @@ pyrhon3 Serve.py
 python3 cliente.py 127.0.0.1 8000
 ```
  [4] - Utilize das opções do Menu para explorar a comunicação local entre cliente e servidor.
-### Remoto (Python)
+### Remoto 
  [1] - Acesse a pasta "Python"
  [2] - Execute o servidor utilizando o comando logo abaixo:
 ```
