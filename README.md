@@ -15,9 +15,8 @@ O paralelismo é abordado na criação das strings, onde são mantidas 11 threds
 # Local (Python)
  [1] - Acesse a pasta "Python"
  [2] - Execute o servidor utilizando o comando logo abaixo:
- ```pyrhon3 Serve.py'''
+ ```pyrhon3 Serve.py```
  [3] - Execute o cliente atravez do comando abaixo:
- '''python3 cliente.py 127.0.0.1 8000'''
+ ```python3 cliente.py 127.0.0.1 8000```
  [4] - Utilize das opções do Menu para explorar a comunicação local entre cliente e servidor.
-
 # Remoto (Python)
