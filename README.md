@@ -9,5 +9,19 @@ Seu metodo de execução inicialmente busta o challeger atrelado à transição 
 
 ### Paralelismo
 O paralelismo é abordado na criação das strings, onde são mantidas 11 threds operantes onde cada thread recrbe a função de gerar strings aleatórias de tamanho = size, quando uma thread termina sem o desafio ser solucionado uma nova thread de tamanho size+1 é criada. A quantidade de threads foi definida como 11, pois apartir de estudos anteriores em laboratorios passados, concluimos que para quantidades de threads maiores que 11, acaba-se gerando uma disputa entre as threads pelo tempo de CPU ocasionando um aumento drástico no tempo de execução.
-E possivel fazer uma analise exploratoria 
 
+## Execução do programa
+
+# Local (Python)
+ [1] - Acesse a pasta "Python"
+ [2] - Execute o servidor utilizando o comando logo abaixo:
+     ```
+      pyrhon3 Serve.py
+     '''
+ [3] - Execute o cliente atravez do comando abaixo:
+     '''
+      python3 cliente.py 127.0.0.1 8000
+     '''
+ [4] - Utilize das opções do Menu para explorar a comunicação local entre cliente e servidor.
+
+# Remoto (Python)
