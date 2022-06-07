@@ -66,7 +66,6 @@ void getTransactionID_client(CLIENT *clnt)
 {
 	printf("Transacao atual: %d\n", *(gettransactionid_100(NULL, clnt)));
 }
-
 void getChallenge_client(CLIENT *clnt, int aux)
 {
 	int num = aux;

@@ -66,7 +66,10 @@ while(True):
     elif(escolha == 2):
         transactionID = int(input("| Digite o ID da transação: "))
         challenger = proxy.getChallenge(transactionID)
-        text = "| O valor do desafio associado ao ID "+str(transactionID)+" e "+str(challenger)
+        if(challenger == -1):
+            text = "| ID da transação invalido"
+        else:
+            text = "| O valor do desafio associado ao ID "+str(transactionID)+" e "+str(challenger)
         printFort(text, aux)
     # 3 - getTransactionStatus()
     elif(escolha == 3):
@@ -133,6 +136,7 @@ while(True):
             return ''.join(random.choice(chars) for _ in range(size))
         def getSeed(challenger, seed, size): # Gera seed
             n = 0
+            size = 2
             while(flag):
                 seedTemp = random_generator(size, n)
                 texto = str(seedTemp).encode('utf-8')
@@ -145,7 +149,7 @@ while(True):
 
         multThread = []
 
-        for i in range(1,challenger*2+1):
+        for i in range(2,13):
             thread = threading.Thread(target=getSeed, args=(challenger, seed, i, ))
             multThread.append(thread)
             thread.start()
