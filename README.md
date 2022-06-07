@@ -11,7 +11,9 @@ Seu metodo de execução inicialmente busta o challeger atrelado à transição 
 ### Paralelismo
 O paralelismo é abordado na criação das strings, onde são mantidas 11 threds operantes onde cada thread recrbe a função de gerar strings aleatórias de tamanho = size, quando uma thread termina sem o desafio ser solucionado uma nova thread de tamanho size+1 é criada. A quantidade de threads foi definida como 11, pois apartir de estudos anteriores em laboratorios passados, concluimos que para quantidades de threads maiores que 11, acaba-se gerando uma disputa entre as threads pelo tempo de CPU ocasionando um aumento drástico no tempo de execução.
 
-###
+### Analise Exploratoria
+Na imagem logo abaixo temos uma pequena demonstração de como o tempo de execução aumenta de forma exponencia conforme almentamos o numero do desafio, entretanto é possivel que mesmo que o chalenger seje grande ele demore segundos para ser processado, pois as strings geradas de forma aleatória podem auxiliar para a diminuição do tempo de execução.
+![alt text](https://github.com/arthurcoelho442/Chamada-de-Procedimento-Remoto-RPC/blob/Arthur/Imagens/Aumento%20de%20tempo%20de%20Execução.png)
 
 ### Execução do programa
 
