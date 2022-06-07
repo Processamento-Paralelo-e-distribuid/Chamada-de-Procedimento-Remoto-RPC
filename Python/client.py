@@ -149,7 +149,7 @@ while(True):
 
         multThread = []
 
-        for i in range(1,12):
+        for i in range(2,13):
             thread = threading.Thread(target=getSeed, args=(challenger, seed, i, ))
             multThread.append(thread)
             thread.start()
