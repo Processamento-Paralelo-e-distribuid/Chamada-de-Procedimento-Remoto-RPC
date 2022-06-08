@@ -66,6 +66,29 @@ def getTransactionStatus(transactionID):
         return -1
     
 def submitChallenge(transactionID, ClientID, seed):
+    def verificaSEED(hash, challenger):
+            for i in range(0,40):
+                ini_string = hash[i]
+                scale = 16
+                res = bin(int(ini_string, scale)).zfill(4)
+                res = str(res)
+                
+                for k in range(len(res)):
+                    if(res[k] == "b"):
+                        res = "0"*(4-len(res[k+1:]))+res[k+1:]
+                        break
+                
+                for j in range (0, 4):
+                    if(challenger == 0):
+                        if(res[j] != "0"):
+                            return 1
+                        else:
+                            return -1
+                    if(res[j] == "0"):
+                        challenger = challenger - 1
+                    else:
+                        return -1
+            return -1
     try:
         df = pd.read_csv(arquivo)
     except:
@@ -82,14 +105,13 @@ def submitChallenge(transactionID, ClientID, seed):
     hash = sha1(texto).hexdigest()
     
     challenge = trasition["Challenge"].values[0]
-    
-    if(hash[0:challenge] == "0"*challenge and hash[challenge] != "0"):
+    if(verificaSEED(hash, challenge) == 1):
         trasition.loc[transactionID,"Seed"]   = str(seed)
         trasition.loc[transactionID,"Winner"] = ClientID
         df.iloc[transactionID,:] = trasition.iloc[0,:]
         
         df.to_csv(arquivo, index=False)
-        return 1
+        return 1 
     else:
         return 0
 

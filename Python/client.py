@@ -131,18 +131,40 @@ while(True):
         text = "| Procurando seed ..."
         printFort(text, aux)
         
+        def verificaSEED(hash, challenger):
+            for i in range(0,40):
+                ini_string = hash[i]
+                scale = 16
+                res = bin(int(ini_string, scale)).zfill(4)
+                res = str(res)
+                
+                for k in range(len(res)):
+                    if(res[k] == "b"):
+                        res = "0"*(4-len(res[k+1:]))+res[k+1:]
+                        break
+                
+                for j in range (0, 4):
+                    if(challenger == 0):
+                        if(res[j] != "0"):
+                            return 1
+                        else:
+                            return -1
+                    if(res[j] == "0"):
+                        challenger = challenger - 1
+                    else:
+                        return -1
+            return -1
         def random_generator(size=6, n=1, chars=string.printable): # Gera string aleatória
             random.seed(n)
             return ''.join(random.choice(chars) for _ in range(size))
         def getSeed(challenger, seed, size): # Gera seed
             n = 0
-            size = 2
             while(flag):
                 seedTemp = random_generator(size, n)
                 texto = str(seedTemp).encode('utf-8')
                 hash = sha1(texto).hexdigest()
-                
-                if(hash[0:challenger] == "0"*challenger and hash[challenger] != "0"):
+
+                if(verificaSEED(hash, challenger) == 1):
                     seed.append(seedTemp)
                     break
                 n = n + 1
